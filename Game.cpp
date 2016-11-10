@@ -97,24 +97,25 @@ int Game::Run()
   auto camera = std::make_shared<Camera>();
   //camera->Move({});
 
-  std::vector<VertexVTN> vertexs;
-  vertexs.push_back({ vertexCube[0], textureCube[0], normalCube[0] });
-  vertexs.push_back({ vertexCube[1], textureCube[1], normalCube[0] });
-  vertexs.push_back({ vertexCube[2], textureCube[2], normalCube[0] });
-  vertexs.push_back({ vertexCube[3], textureCube[3], normalCube[0] });
-  vertexs.push_back({ vertexCube[8], textureCube[0], normalCube[2] });
-  vertexs.push_back({ vertexCube[9], textureCube[1], normalCube[2] });
-  vertexs.push_back({ vertexCube[10], textureCube[2], normalCube[2] });
-  vertexs.push_back({ vertexCube[11], textureCube[3], normalCube[2] });
+  std::vector<VertexVT> vertexs;
+  vertexs.push_back({ vertexCube[0], textureCube[0] });
+  vertexs.push_back({ vertexCube[1], textureCube[1] });
+  vertexs.push_back({ vertexCube[2], textureCube[2] });
+  vertexs.push_back({ vertexCube[3], textureCube[3] });
+  vertexs.push_back({ vertexCube[8], textureCube[0] });
+  vertexs.push_back({ vertexCube[9], textureCube[1] });
+  vertexs.push_back({ vertexCube[10], textureCube[2] });
+  vertexs.push_back({ vertexCube[11], textureCube[3] });
 
 
   RenderMeshVao mesh;
-  auto mAttribute = VertexVTN::Get();
+  auto mAttribute = VertexVT::Get();
   auto locations = shader->GetAttributeLocation(mAttribute);
   mesh.SetAttribute(mAttribute, locations);
   mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 12);
 
-  camera->Move({ 0, -1, 0 });
+  //camera->Move({ 0, 0, 10 });
+  //camera->Update();
 
   auto currTime = static_cast<float>(glfwGetTime());
   while (!mWindow->WindowShouldClose())

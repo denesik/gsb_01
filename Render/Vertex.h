@@ -29,6 +29,12 @@ VERTEX
   (glm::vec3, normal)
 )
 
+VERTEX
+(
+  (VertexVT)
+  (glm::vec3, vertex)
+  (glm::vec2, texture)
+  )
 
 #endif // Vertex_h__
 

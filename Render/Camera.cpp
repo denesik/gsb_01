@@ -18,9 +18,17 @@ Camera::Camera(void)
   mQuat = glm::quat_cast(glm::lookAt
     (
       glm::vec3(0.0f, 0.0f, 0.0f), // eye
-      glm::vec3(0.0f, 1.0f, 0.0f), // center
-      glm::vec3(0.0f, 0.0f, 1.0f)  // up
+      glm::vec3(0.0f, 0.0f, -1.0f), // center
+      glm::vec3(0.0f, 1.0f, 0.0f)  // up
       ));
+
+  mView = glm::lookAt
+    (
+      glm::vec3(0.0f, 0.0f, 2.0f), // eye
+      glm::vec3(0.0f, 0.0f, 1.0f), // center
+      glm::vec3(0.0f, 1.0f, 0.0f)  // up
+      );
+  mViewProjection = mProjection * mView;
 }
 
 
