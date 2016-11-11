@@ -30,9 +30,9 @@ Render::Render()
     GL_CALL(glEnable(GL_TEXTURE_2D));
   }
 
-  GL_CALL(glDisable(GL_CULL_FACE));
-  //GL_CALL(glEnable(GL_CULL_FACE));
-  //GL_CALL(glCullFace(GL_BACK));
+  //GL_CALL(glDisable(GL_CULL_FACE));
+  GL_CALL(glEnable(GL_CULL_FACE));
+  GL_CALL(glCullFace(GL_BACK));
 
   GL_CALL(glEnable(GL_DEPTH_TEST));            // Разрешить тест глубины
   GL_CALL(glDepthFunc(GL_LEQUAL));            // Тип теста глубины

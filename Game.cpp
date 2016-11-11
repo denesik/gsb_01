@@ -40,7 +40,7 @@ Game::~Game()
 
 static glm::vec3 vertexCube[] =
 {
-  { 0.0f, 0.0f, 0.0f },{ 0.0f, 0.0f, 1.0f },{ 1.0f, 0.0f, 1.0f },{ 1.0f, 0.0f, 0.0f }, // front
+  { 0.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f }, // front
   { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 1.0f },{ 1.0f, 1.0f, 1.0f },{ 1.0f, 1.0f, 0.0f }, // right 
   { 1.0f, 1.0f, 0.0f },{ 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f }, // back
   { 0.0f, 1.0f, 0.0f },{ 0.0f, 1.0f, 1.0f },{ 0.0f, 0.0f, 1.0f },{ 0.0f, 0.0f, 0.0f }, // left
@@ -61,8 +61,7 @@ static glm::vec3 normalCube[] =
 
 static size_t indexCubeSide[] =
 {
-  0, 3, 2, 2, 1, 0,
-  4, 7, 6, 6, 5, 4
+  0, 1, 2, 2, 3, 0
 };
 
 static glm::vec2 textureCube[] =
@@ -86,7 +85,9 @@ int Game::Run()
   TextureManager::Get().LoadDirectory("data\\textures\\");
   TextureManager::Get().Compile();
 
-  auto texture = TextureManager::Get().GetTexture("test_texture.png");
+  auto texture = TextureManager::Get().GetTexture("test_texture");
+
+  auto &men = TextureManager::Get();
 
   auto shader = std::make_shared<Shader>();
   shader->BuildBody("data\\basic.glsl");
@@ -97,22 +98,44 @@ int Game::Run()
   auto camera = std::make_shared<Camera>();
   //camera->Move({});
 
+  const auto &txtPos = std::get<glm::uvec4>(texture);
+
+  glm::vec2 txtCoord[] =
+  {
+    { txtPos.x,            txtPos.y },
+    { txtPos.x,            txtPos.y + txtPos.w },
+    { txtPos.x + txtPos.z, txtPos.y + txtPos.w },
+    { txtPos.x + txtPos.z, txtPos.y }
+  };
+
+  glm::vec2 scale(1.0f / (static_cast<glm::vec2>(std::get<0>(texture)->GetSize())));
+  txtCoord[0] *= scale;
+  txtCoord[1] *= scale;
+  txtCoord[2] *= scale;
+  txtCoord[3] *= scale;
+
+  glm::vec2 txtScale((txtCoord[2].x - txtCoord[0].x), (txtCoord[2].y - txtCoord[0].y));
+
+  glm::vec2 test[] =
+  {
+    textureCube[0] * txtScale + txtCoord[0],
+    textureCube[1] * txtScale + txtCoord[0],
+    textureCube[2] * txtScale + txtCoord[0],
+    textureCube[3] * txtScale + txtCoord[0],
+  };
+
   std::vector<VertexVT> vertexs;
-  vertexs.push_back({ vertexCube[0], textureCube[0] });
-  vertexs.push_back({ vertexCube[1], textureCube[1] });
-  vertexs.push_back({ vertexCube[2], textureCube[2] });
-  vertexs.push_back({ vertexCube[3], textureCube[3] });
-  vertexs.push_back({ vertexCube[8], textureCube[0] });
-  vertexs.push_back({ vertexCube[9], textureCube[1] });
-  vertexs.push_back({ vertexCube[10], textureCube[2] });
-  vertexs.push_back({ vertexCube[11], textureCube[3] });
+  vertexs.push_back({ vertexCube[0],test[0] });
+  vertexs.push_back({ vertexCube[1],test[3] });
+  vertexs.push_back({ vertexCube[2],test[2] });
+  vertexs.push_back({ vertexCube[3],test[1] });
 
 
   RenderMeshVao mesh;
   auto mAttribute = VertexVT::Get();
   auto locations = shader->GetAttributeLocation(mAttribute);
   mesh.SetAttribute(mAttribute, locations);
-  mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 12);
+  mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 6);
 
   //camera->Move({ 0, 0, 10 });
   //camera->Update();
