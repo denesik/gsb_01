@@ -28,6 +28,8 @@ public:
   /// Получить список локаций.
   std::vector<int> GetAttributeLocation(const std::vector<Attribute> &attribute);
 
+  int GetAttributeLocation(const Attribute &attribute);
+
   template<class T>
   void SetUniform(const T &val, const char *name = "")
   {

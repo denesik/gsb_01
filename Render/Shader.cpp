@@ -182,6 +182,11 @@ std::vector<int> Shader::GetAttributeLocation(const std::vector<Attribute> &attr
   return locations;
 }
 
+int Shader::GetAttributeLocation(const Attribute &attribute)
+{
+  return glGetAttribLocation(mProgram, attribute.name);
+}
+
 unsigned int Shader::CreateShader(const std::string &data, int type)
 {
   if (data.empty())

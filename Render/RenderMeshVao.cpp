@@ -33,7 +33,7 @@ void RenderMeshVao::SetAttribute(const std::vector<Attribute> &attribute, const 
     Create();
   }
 
-  glBindVertexArray(mVao);
+  //glBindVertexArray(mVao);
   glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 
   mVertexSize = 0;
@@ -79,9 +79,9 @@ void RenderMeshVao::Draw() const
 void RenderMeshVao::Create()
 {
   GL_CALL(glGenVertexArrays(1, &mVao));
+  GL_CALL(glBindVertexArray(mVao));
   GL_CALL(glGenBuffers(1, &mVbo));
   GL_CALL(glGenBuffers(1, &mVbi));
-  GL_CALL(glBindVertexArray(mVao));
   GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVbi));
   mCreated = true;
 }

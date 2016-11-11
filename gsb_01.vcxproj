@@ -135,6 +135,7 @@
     <ClCompile Include="Render\Shader.cpp" />
     <ClCompile Include="Render\Texture.cpp" />
     <ClCompile Include="Render\TextureManager.cpp" />
+    <ClCompile Include="Render\VertexArray.cpp" />
     <ClCompile Include="tools\Log.cpp" />
     <ClCompile Include="Window\Keyboard.cpp" />
     <ClCompile Include="Window\Mouse.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\TextureManager.h" />
     <ClInclude Include="Render\Vertex.h" />
+    <ClInclude Include="Render\VertexArray.h" />
     <ClInclude Include="Render\VertexTools.h" />
     <ClInclude Include="tools\Log.h" />
     <ClInclude Include="Window\Keyboard.h" />

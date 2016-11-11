@@ -19,6 +19,7 @@
 #include "Render/Camera.h"
 #include "Render/RenderMeshVao.h"
 #include "Render/OpenGLCall.h"
+#include "Render/VertexArray.h"
 
 
 
@@ -59,7 +60,7 @@ static glm::vec3 normalCube[] =
 };
 
 
-static size_t indexCubeSide[] =
+static uint32_t indexCubeSide[] =
 {
   0, 1, 2, 2, 3, 0
 };
@@ -109,11 +110,29 @@ int Game::Run()
   vertexs.push_back({ vertexCube[3],{ uv.x, uv.w } });
 
 
-  RenderMeshVao mesh;
-  auto mAttribute = VertexVT::Get();
-  auto locations = shader->GetAttributeLocation(mAttribute);
-  mesh.SetAttribute(mAttribute, locations);
-  mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 6);
+  VertexArray vao;
+  {
+    auto &buf = vao.CreateBuffer(vertexs.size() * sizeof(VertexVT) / sizeof(float));
+    memcpy(buf.Data(), vertexs.data(), vertexs.size() * sizeof(VertexVT));
+    buf.SetAttibute(VertexVT::Get()[0], shader->GetAttributeLocation(VertexVT::Get()[0]));
+    buf.SetAttibute(VertexVT::Get()[1], shader->GetAttributeLocation(VertexVT::Get()[1]));
+
+    std::vector<float> tmp(buf.Data(), buf.Data() + vertexs.size() * sizeof(VertexVT) / sizeof(float));
+    int t = 0;
+  }
+  {
+    auto &buf = vao.CreateIndexBuffer(6);
+    memcpy(buf.Data(), indexCubeSide, 6 * sizeof(uint32_t));
+    std::vector<uint32_t> tmp(buf.Data(), buf.Data() + 6);
+    int t = 0;
+  }
+  vao.Compile();
+// 
+//   RenderMeshVao mesh;
+//   auto mAttribute = VertexVT::Get();
+//   auto locations = shader->GetAttributeLocation(mAttribute);
+//   mesh.SetAttribute(mAttribute, locations);
+//   mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 6);
 
   //camera->Move({ 0, 0, 10 });
   //camera->Update();
@@ -141,7 +160,8 @@ int Game::Run()
 
     shader->SetUniform(camera->GetViewProject(), "transform_VP");
 
-    mesh.Draw();
+    vao.Draw();
+    //mesh.Draw();
 
     mWindow->Update();
 	  //std::this_thread::sleep_for(std::chrono::milliseconds(1)); ?!
