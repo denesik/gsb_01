@@ -9,12 +9,6 @@
 #include "ErrorImage.h"
 #include "..\tools\Log.h"
 
-TextureManager &TextureManager::Get()
-{
-  static TextureManager obj;
-  return obj;
-}
-
 TextureManager::TextureManager()
 {
   mMultiAtlas.resize(1);
@@ -26,7 +20,22 @@ TextureManager::TextureManager()
 
 void TextureManager::LoadTexture(const std::string &name)
 {
-  LoadTexture(std::initializer_list<std::string>{name});
+  for (unsigned int i = 0; i < mMultiAtlas.size(); ++i)
+  {
+    if (LoadToAtlas(i, name))
+    {
+      // Текстура загружена. Выходим.
+      return;
+    }
+  }
+  // Мы пытались, но не смоги...
+  // Попробуем создать еще один атлас.
+  mMultiAtlas.resize(mMultiAtlas.size() + 1);
+  if (!LoadToAtlas(mMultiAtlas.size() - 1, name))
+  {
+    // Ошибка.
+    LOG(warning) << "Текстура не загружена в атлас. ";
+  }
 }
 
 void TextureManager::LoadDirectory(const std::string &dir)
@@ -39,119 +48,82 @@ void TextureManager::LoadDirectory(const std::string &dir)
   {
     if (boost::filesystem::is_regular_file(file) && boost::filesystem::extension(file) == ".png")
     {
-      LoadTexture(file.stem().string());
+      LoadTexture(file.string());
     }
   }
 }
 
-void TextureManager::LoadTexture(const std::initializer_list<std::string> &names)
-{
-  for (unsigned int i = 0; i < mMultiAtlas.size(); ++i)
-  {
-    if (LoadToAtlas(i, names))
-    {
-      // Кажется мы смогли загрузить все текстуры в один атлас.
-      return;
-    }
-  }
-  // Мы пытались, но не смоги...
-  // Попробуем создать еще один атлас.
-  mMultiAtlas.resize(mMultiAtlas.size() + 1);
-  if (!LoadToAtlas(mMultiAtlas.size() - 1, names))
-  {
-    // Ошибка.
-    //std::cout << "TextureManager. Load texture error." << std::endl;
-  }
-}
-
-void TextureManager::LoadTextureMultiplied(const std::string & mask, const std::string & mat)
-{
-  for (unsigned int i = 0; i < mMultiAtlas.size(); ++i)
-  {
-    if (LoadToAtlasMultiplied(i, mask, mat))
-    {
-      // Кажется мы смогли загрузить все текстуры в один атлас.
-      return;
-    }
-  }
-  // Мы пытались, но не смоги...
-  // Попробуем создать еще один атлас.
-  mMultiAtlas.resize(mMultiAtlas.size() + 1);
-  if (!LoadToAtlasMultiplied(mMultiAtlas.size() - 1, mask, mat))
-  {
-    // Ошибка.
-    //std::cout << "TextureManager. Load texture error." << std::endl;
-  }
-}
 
 //TODO:лучше использовать сразу текстурные координаты, вместо отступа и размера в пикселях
-std::tuple<PTexture, glm::uvec4> TextureManager::GetTexture(const std::string &name) const
+Texture *TextureManager::GetTexture(const std::string &name) const
 {
   auto itTexture = mTextures.find(name);
   if (itTexture == mTextures.end())
   {
     // Текстура не найдена.
     const auto &texture = mTextures.find(error_image.name)->second;
-    return std::tuple<PTexture, glm::uvec4>(mMultiAtlas[texture.index].texture, texture.pos);
+    return mMultiAtlas[texture.index].texture.get();
   }
 
-  return std::tuple<PTexture, glm::uvec4>(mMultiAtlas[(*itTexture).second.index].texture, (*itTexture).second.pos);
+  return mMultiAtlas[(*itTexture).second.index].texture.get();
 }
+
+glm::vec4 TextureManager::GetTextureUV(const std::string &name) const
+{
+  auto itTexture = mTextures.find(name);
+  if (itTexture == mTextures.end())
+  {
+    // Текстура не найдена.
+    const auto &texture = mTextures.find(error_image.name)->second;
+    return texture.uv;
+  }
+
+  return (*itTexture).second.uv;
+}
+
 
 void TextureManager::Compile()
 {
   LOG(trace) << "texture atlases recompiling";
   for (unsigned int i = 0; i < mMultiAtlas.size(); ++i)
   {
-    mMultiAtlas[i].texture = std::make_shared<Texture>(mMultiAtlas[i].atlas.GetAtlas(), false);
+    mMultiAtlas[i].texture = std::make_unique<Texture>(mMultiAtlas[i].atlas.GetAtlas(), false);
     mMultiAtlas[i].texture->GenMipmap();
-//    mMultiAtlas[i].atlas.GetAtlas().Save("Atlas_" + std::to_string(i) + ".png");
+    mMultiAtlas[i].atlas.GetAtlas().Save("atlas.png");
   }
+
+  for (auto &texture : mTextures)
+  {
+    const auto &pos = texture.second.pos;
+
+    glm::vec2 coord[] =
+    {
+      { pos.x,         pos.y },
+      { pos.x + pos.z, pos.y + pos.w },
+    };
+    glm::vec2 scale(1.0f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].texture->GetSize())));
+    coord[0] *= scale;
+    coord[1] *= scale;
+
+    texture.second.uv = { coord[0].x, coord[0].y, coord[1].x, coord[1].y };
+  }
+
   LOG(trace) << "done";
 }
 
-bool TextureManager::LoadToAtlas(size_t atlas, const std::initializer_list<std::string> &names)
+bool TextureManager::LoadToAtlas(size_t atlas, const std::string &name)
 {
-  // TODO: Удаление из атласа, если не смогли вставить.
-  for (auto &name : names)
-  {
-    Bitmap bitmap;
-    try
-    {
-      bitmap = Bitmap(std::string("data\\textures\\") + name + ".png");
-    }
-    catch (char *msg)
-    {
-      std::cout << msg << std::endl;
-      continue;
-    }
-    auto pos = mMultiAtlas[atlas].atlas.Add(name, bitmap);
-
-    mTextures[name] = { atlas, pos };
-  }
-
-  return true;
-}
-
-bool TextureManager::LoadToAtlasMultiplied(size_t atlas, const std::string &mask, const std::string &mat)
-{
-  // TODO: Удаление из атласа, если не смогли вставить.
-  Bitmap bitmap_mask, bitmap_mat;
+  Bitmap bitmap;
   try
   {
-    bitmap_mask = Bitmap(std::string("data\\textures\\") + mask + ".png");
-    bitmap_mat = Bitmap(std::string("data\\textures\\") + mat + ".png");
+    bitmap = Bitmap(name);
   }
-  catch (const std::exception &e)
+  catch (char *)
   {
-    LOG(error) << e.what();
+    return false;
   }
-
-  bitmap_mask *= bitmap_mat;
-  
-  auto pos = mMultiAtlas[atlas].atlas.Add(mask, bitmap_mask);
-
-  mTextures[mask+"_"+mat] = { atlas, pos };
+  auto pos = mMultiAtlas[atlas].atlas.Add(name, bitmap);
+  mTextures[name] = { atlas, pos };
 
   return true;
 }

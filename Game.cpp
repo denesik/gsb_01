@@ -82,12 +82,13 @@ int Game::Run()
 
   Render render;
 
-  TextureManager::Get().LoadDirectory("data\\textures\\");
-  TextureManager::Get().Compile();
+  TextureManager mTextureManager;
 
-  auto texture = TextureManager::Get().GetTexture("test_texture");
+  mTextureManager.LoadDirectory("data\\textures\\");
+  mTextureManager.Compile();
 
-  auto &men = TextureManager::Get();
+
+  auto texture = mTextureManager.GetTexture("data\\textures\\test_texture.png");
 
   auto shader = std::make_shared<Shader>();
   shader->BuildBody("data\\basic.glsl");
@@ -98,37 +99,14 @@ int Game::Run()
   auto camera = std::make_shared<Camera>();
   //camera->Move({});
 
-  const auto &txtPos = std::get<glm::uvec4>(texture);
 
-  glm::vec2 txtCoord[] =
-  {
-    { txtPos.x,            txtPos.y },
-    { txtPos.x,            txtPos.y + txtPos.w },
-    { txtPos.x + txtPos.z, txtPos.y + txtPos.w },
-    { txtPos.x + txtPos.z, txtPos.y }
-  };
-
-  glm::vec2 scale(1.0f / (static_cast<glm::vec2>(std::get<0>(texture)->GetSize())));
-  txtCoord[0] *= scale;
-  txtCoord[1] *= scale;
-  txtCoord[2] *= scale;
-  txtCoord[3] *= scale;
-
-  glm::vec2 txtScale((txtCoord[2].x - txtCoord[0].x), (txtCoord[2].y - txtCoord[0].y));
-
-  glm::vec2 test[] =
-  {
-    textureCube[0] * txtScale + txtCoord[0],
-    textureCube[1] * txtScale + txtCoord[0],
-    textureCube[2] * txtScale + txtCoord[0],
-    textureCube[3] * txtScale + txtCoord[0],
-  };
+  auto uv = mTextureManager.GetTextureUV("data\\textures\\test_texture.png");
 
   std::vector<VertexVT> vertexs;
-  vertexs.push_back({ vertexCube[0],test[0] });
-  vertexs.push_back({ vertexCube[1],test[3] });
-  vertexs.push_back({ vertexCube[2],test[2] });
-  vertexs.push_back({ vertexCube[3],test[1] });
+  vertexs.push_back({ vertexCube[0],{ uv.x, uv.y } });
+  vertexs.push_back({ vertexCube[1],{ uv.z, uv.y } });
+  vertexs.push_back({ vertexCube[2],{ uv.z, uv.w } });
+  vertexs.push_back({ vertexCube[3],{ uv.x, uv.w } });
 
 
   RenderMeshVao mesh;
@@ -157,7 +135,7 @@ int Game::Run()
 
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));     // Очистка экрана
 
-    std::get<0>(texture)->Set(TEXTURE_SLOT_0);
+    texture->Set(TEXTURE_SLOT_0);
     shader->Use();
     shader->SetUniform(TEXTURE_SLOT_0, "atlas");
 

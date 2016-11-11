@@ -10,30 +10,28 @@
 #include <string>
 #include <unordered_map>
 #include "Atlas.h"
+#include <memory>
 
 
 /// Менеджер текстур.
 /// Хранит все игровые текстуры.
+/// TODO: Кеширование.
 class TextureManager
 {
 public:
-  static TextureManager &Get();
-
+  TextureManager();
+  
   /// Загрузить указанную текстуру.
   void LoadTexture(const std::string &name);
 
-  void LoadDirectory(const std::string & s);
+  /// Загрузить все текстуры в директории.
+  void LoadDirectory(const std::string &directory);
 
-  /// Загрузить набор текстур.
-  /// Все текстуры будут добавлены в один текстурный атлас.
-  void LoadTexture(const std::initializer_list<std::string> &names);
+  /// Получить текстуру по имени текстуры.
+  Texture *GetTexture(const std::string &name) const;
 
-  /// Загрузка тесктуры @mat умноженной на маску @mask. Имя является суммой строк @mat и @mask
-  void LoadTextureMultiplied(const std::string & mask, const std::string & mat);
-
-  /// Получить текстуру по имени.
-  /// Если текстуры не существует, возвращается нулевой указатель.
-  std::tuple<PTexture, glm::uvec4> GetTexture(const std::string &name) const;
+  /// Получить текстурные координаты по имени текстуры.
+  glm::vec4 GetTextureUV(const std::string &name) const;
 
   /// Создает текстуры в графической памяти.
   void Compile();
@@ -42,8 +40,9 @@ private:
 
   struct AtlasChunk
   {
-    size_t index; // Номер атласа.
-    glm::uvec4 pos;     // Положение в атласе.
+    size_t index;       // Номер атласа.
+    glm::uvec4 pos;      // Положение в атласе.
+    glm::vec4 uv;
   };
 
   struct AtlasTexture
@@ -52,7 +51,7 @@ private:
       : atlas({ 64, 64 })
     {};
     Atlas atlas;
-    PTexture texture;
+    std::unique_ptr<Texture> texture;
   };
 
   std::vector<AtlasTexture> mMultiAtlas;
@@ -60,13 +59,7 @@ private:
   std::unordered_map<std::string, AtlasChunk> mTextures;
 
 private:
-  TextureManager();
-  ~TextureManager() {};
-  TextureManager(const TextureManager &) = delete;
-  TextureManager& operator=(const TextureManager &) = delete;
-
-  bool LoadToAtlas(size_t atlas, const std::initializer_list<std::string> &names);
-  bool LoadToAtlasMultiplied(size_t atlas, const std::string & mask, const std::string & mat);
+  bool LoadToAtlas(size_t atlas, const std::string &name);
 
 };
 

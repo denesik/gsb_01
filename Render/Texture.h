@@ -24,9 +24,6 @@ enum TextureSlot
   TEXTURE_SLOT_COUNT,
 };
 
-class Texture;
-typedef std::shared_ptr<Texture> PTexture;
-
 /// Текстура. Находится в видеопамяти.
 class Texture
 {
