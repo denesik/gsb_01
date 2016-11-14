@@ -63,7 +63,7 @@ void VertexArray::Release()
 VertexBuffer::VertexBuffer(size_t size)
   : mSize(size)
 {
-  mData = new float[mSize];
+  mData = new char[mSize];
 }
 
 VertexBuffer::~VertexBuffer()
@@ -110,20 +110,20 @@ void VertexBuffer::Compile()
     }
 
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, mVbo));
-    GL_CALL(glBufferData(GL_ARRAY_BUFFER, mSize * sizeof(float), mData, GL_STATIC_DRAW));
+    GL_CALL(glBufferData(GL_ARRAY_BUFFER, mSize, mData, GL_STATIC_DRAW));
 
-    //delete[] mData;
-    //mData = nullptr;
+    delete[] mData;
+    mData = nullptr;
   }
 }
 
 void IndexBuffer::Draw()
 {
   GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVbi));
-  GL_CALL(glDrawElements(GL_TRIANGLES, mSize, GL_UNSIGNED_INT, NULL));
+  GL_CALL(glDrawElements(GL_TRIANGLES, mSize / sizeof(unsigned int), GL_UNSIGNED_INT, NULL));
 }
 
-float *VertexBuffer::Data() const
+void *VertexBuffer::Data() const
 {
   return mData;
 }
@@ -136,7 +136,7 @@ size_t VertexBuffer::Size() const
 IndexBuffer::IndexBuffer(size_t size)
   : mSize(size)
 {
-  mData = new int32_t[mSize];
+  mData = new char[mSize];
 }
 
 IndexBuffer::~IndexBuffer()
@@ -148,7 +148,7 @@ IndexBuffer::~IndexBuffer()
   }
 }
 
-int32_t * IndexBuffer::Data() const
+void * IndexBuffer::Data() const
 {
   return mData;
 }
@@ -174,7 +174,7 @@ void IndexBuffer::Compile()
   if (mData)
   {
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVbi));
-    GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, mSize * sizeof(uint32_t), mData, GL_STATIC_DRAW));
+    GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, mSize, mData, GL_STATIC_DRAW));
     delete[] mData;
     mData = nullptr;
   }

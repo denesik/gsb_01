@@ -112,21 +112,16 @@ int Game::Run()
 
   VertexArray vao;
   {
-    auto &buf = vao.CreateBuffer(vertexs.size() * sizeof(VertexVT) / sizeof(float));
-    memcpy(buf.Data(), vertexs.data(), vertexs.size() * sizeof(VertexVT));
+    auto &buf = vao.CreateBuffer(vertexs.size() * sizeof(VertexVT));
+    memcpy(buf.Data(), vertexs.data(), buf.Size());
     for (auto &attibute : VertexVT::Get())
     {
       buf.SetAttibute(attibute);
     }
-
-    std::vector<float> tmp(buf.Data(), buf.Data() + vertexs.size() * sizeof(VertexVT) / sizeof(float));
-    int t = 0;
   }
   {
-    auto &buf = vao.CreateIndexBuffer(6);
-    memcpy(buf.Data(), indexCubeSide, 6 * sizeof(uint32_t));
-    std::vector<uint32_t> tmp(buf.Data(), buf.Data() + 6);
-    int t = 0;
+    auto &buf = vao.CreateIndexBuffer(6 * sizeof(uint32_t));
+    memcpy(buf.Data(), indexCubeSide, buf.Size());
   }
   vao.Compile();
 // 

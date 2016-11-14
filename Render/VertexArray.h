@@ -10,17 +10,18 @@
 class VertexBuffer
 {
 public:
+  /// Выделяет память размером size байт.
   VertexBuffer(size_t size);
   ~VertexBuffer();
 
   void SetAttibute(const Attribute &attribute);
 
-  float *Data() const;
+  void *Data() const;
 
   size_t Size() const;
 
 private:
-  float *mData;
+  void *mData;
   const size_t mSize;
 
   std::vector<Attribute> mAttributs;
@@ -41,12 +42,12 @@ public:
   IndexBuffer(size_t size);
   ~IndexBuffer();
 
-  int32_t *Data() const;
+  void *Data() const;
 
   size_t Size() const;
 
 private:
-  int32_t *mData;
+  void *mData;
   const size_t mSize;
 
   unsigned int mVbi = 0;
