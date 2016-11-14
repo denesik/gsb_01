@@ -23,8 +23,13 @@
 #define __VERTEX_MAKE_STR(x) __VERTEX_MAKE_STR_1(x)
 #define __VERTEX_MAKE_STR_1(x) #x
 
+
+#define __VERTEX_GLUE(x, y) __VERTEX_GLUE_1(x, y)
+#define __VERTEX_GLUE_1(x, y) x##y
+
 #define __VERTEX_DECL_VERTEX_ATTRIBUTE(r, data, elem) \
 { \
+  __VERTEX_GLUE(Location_,BOOST_PP_TUPLE_ELEM(2, 1, elem)),\
   sizeof(__VERTEX_SEQ_MEMBER(data, BOOST_PP_TUPLE_ELEM(2, 1, elem))), \
   offsetof(data, BOOST_PP_TUPLE_ELEM(2, 1, elem)), \
   __VERTEX_MAKE_STR(BOOST_PP_TUPLE_ELEM(2, 1, elem))\

@@ -13,7 +13,7 @@ public:
   VertexBuffer(size_t size);
   ~VertexBuffer();
 
-  void SetAttibute(const Attribute &attribute, int location);
+  void SetAttibute(const Attribute &attribute);
 
   float *Data() const;
 
@@ -22,13 +22,8 @@ public:
 private:
   float *mData;
   const size_t mSize;
-  struct Location
-  {
-    Attribute attribute;
-    int location;
-  };
 
-  std::vector<Location> mLocations;
+  std::vector<Attribute> mAttributs;
 
   unsigned int mVbo = 0;
 

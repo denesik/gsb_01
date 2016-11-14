@@ -114,8 +114,10 @@ int Game::Run()
   {
     auto &buf = vao.CreateBuffer(vertexs.size() * sizeof(VertexVT) / sizeof(float));
     memcpy(buf.Data(), vertexs.data(), vertexs.size() * sizeof(VertexVT));
-    buf.SetAttibute(VertexVT::Get()[0], shader->GetAttributeLocation(VertexVT::Get()[0]));
-    buf.SetAttibute(VertexVT::Get()[1], shader->GetAttributeLocation(VertexVT::Get()[1]));
+    for (auto &attibute : VertexVT::Get())
+    {
+      buf.SetAttibute(attibute);
+    }
 
     std::vector<float> tmp(buf.Data(), buf.Data() + vertexs.size() * sizeof(VertexVT) / sizeof(float));
     int t = 0;

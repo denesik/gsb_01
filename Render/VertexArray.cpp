@@ -75,9 +75,9 @@ VertexBuffer::~VertexBuffer()
   }
 }
 
-void VertexBuffer::SetAttibute(const Attribute &attribute, int location)
+void VertexBuffer::SetAttibute(const Attribute &attribute)
 {
-  mLocations.push_back({ attribute, location });
+  mAttributs.push_back(attribute);
 }
 
 void VertexBuffer::Create()
@@ -97,16 +97,16 @@ void VertexBuffer::Compile()
     glBindBuffer(GL_ARRAY_BUFFER, mVbo);
 
     size_t mVertexSize = 0;
-    for (const auto &location : mLocations)
+    for (const auto &attribute : mAttributs)
     {
-      mVertexSize += location.attribute.size;
+      mVertexSize += attribute.size;
     }
 
-    for (const auto &location : mLocations)
+    for (const auto &attribute : mAttributs)
     {
-      glVertexAttribPointer(location.location, location.attribute.size / sizeof(float),
-        GL_FLOAT, GL_FALSE, mVertexSize, (char *)NULL + location.attribute.offset);
-      glEnableVertexAttribArray(location.location);
+      glVertexAttribPointer(attribute.location, attribute.size / sizeof(float),
+        GL_FLOAT, GL_FALSE, mVertexSize, (char *)NULL + attribute.offset);
+      glEnableVertexAttribArray(attribute.location);
     }
 
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, mVbo));

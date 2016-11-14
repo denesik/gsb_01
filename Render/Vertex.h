@@ -10,9 +10,17 @@
 #include <vector>
 #include "VertexTools.h"
 
+enum AttributeLocations
+{
+  Location_vertex = 1,
+  Location_texture = 2,
+  Location_normal = 3,
+};
+
 /// Конфигурация атрибута.
 struct Attribute
 {
+  int location;
   size_t size;
   size_t offset;
   const char *name;
@@ -34,7 +42,7 @@ VERTEX
   (VertexVT)
   (glm::vec3, vertex)
   (glm::vec2, texture)
-  )
+)
 
 #endif // Vertex_h__
 
