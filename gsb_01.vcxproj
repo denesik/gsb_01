@@ -165,6 +165,7 @@
     <ClInclude Include="Render\VertexArray.h" />
     <ClInclude Include="Render\VertexTools.h" />
     <ClInclude Include="tools\Log.h" />
+    <ClInclude Include="tools\thread_vane.h" />
     <ClInclude Include="Window\Keyboard.h" />
     <ClInclude Include="Window\Mouse.h" />
     <ClInclude Include="Window\Window.h" />

@@ -145,6 +145,7 @@
     <ClInclude Include="Render\UniformTools.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
+    <ClInclude Include="tools\thread_vane.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
