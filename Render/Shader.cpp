@@ -288,6 +288,11 @@ int Shader::GetUniformLocation(const std::string &uni_name) const
   }
 }
 
+int Shader::GetUniformLocation(const char *name)
+{
+  return glGetUniformLocation(mProgram, name);
+}
+
 void Shader::AddExtension(std::string s)
 {
   if (source_loaded)

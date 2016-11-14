@@ -1,5 +1,5 @@
 uniform sampler2D atlas;
-uniform mat4 transform_VP;
+uniform mat4 mat_vp;
 
 #ifdef _FRAGMENT_
 
@@ -32,7 +32,7 @@ void main()
 {	
 
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  transform_VP * vec4(vertex, 1.0);
+	gl_Position =  mat_vp * vec4(vertex, 1.0);
 
 	fragTexcoord = texture;
 }

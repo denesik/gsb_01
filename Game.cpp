@@ -20,7 +20,7 @@
 #include "Render/RenderMeshVao.h"
 #include "Render/OpenGLCall.h"
 #include "Render/VertexArray.h"
-
+#include "Render/UniformBase.h"
 
 
 Game::Game()
@@ -88,7 +88,6 @@ int Game::Run()
   mTextureManager.LoadDirectory("data\\textures\\");
   mTextureManager.Compile();
 
-
   auto texture = mTextureManager.GetTexture("data\\textures\\test_texture.png");
 
   auto shader = std::make_shared<Shader>();
@@ -96,6 +95,9 @@ int Game::Run()
   shader->BuildType(GL_FRAGMENT_SHADER);
   shader->BuildType(GL_VERTEX_SHADER);
   shader->Link();
+
+  UniformBasic uniform;
+  uniform.AttachShader(*shader);
 
   auto camera = std::make_shared<Camera>();
   //camera->Move({});
@@ -153,9 +155,12 @@ int Game::Run()
 
     texture->Set(TEXTURE_SLOT_0);
     shader->Use();
-    shader->SetUniform(TEXTURE_SLOT_0, "atlas");
 
-    shader->SetUniform(camera->GetViewProject(), "transform_VP");
+    //shader->SetUniform(TEXTURE_SLOT_0, "atlas");
+    //shader->SetUniform(camera->GetViewProject(), "transform_VP");
+    uniform.atlas(TEXTURE_SLOT_0);
+    uniform.mat_vp(camera->GetViewProject());
+    uniform.Bind();
 
     vao.Draw();
     //mesh.Draw();
@@ -163,7 +168,6 @@ int Game::Run()
     mWindow->Update();
 	  //std::this_thread::sleep_for(std::chrono::milliseconds(1)); ?!
   }
-
   return 0;
 }
 

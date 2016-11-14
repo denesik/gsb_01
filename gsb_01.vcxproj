@@ -135,6 +135,7 @@
     <ClCompile Include="Render\Shader.cpp" />
     <ClCompile Include="Render\Texture.cpp" />
     <ClCompile Include="Render\TextureManager.cpp" />
+    <ClCompile Include="Render\UniformBase.cpp" />
     <ClCompile Include="Render\VertexArray.cpp" />
     <ClCompile Include="tools\Log.cpp" />
     <ClCompile Include="Window\Keyboard.cpp" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="Render\Atlas.h" />
     <ClInclude Include="Render\Bitmap.h" />
@@ -157,6 +159,8 @@
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\TextureManager.h" />
+    <ClInclude Include="Render\UniformBase.h" />
+    <ClInclude Include="Render\UniformTools.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Render\VertexArray.h" />
     <ClInclude Include="Render\VertexTools.h" />

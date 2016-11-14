@@ -30,6 +30,8 @@ public:
 
   int GetAttributeLocation(const Attribute &attribute);
 
+  int GetUniformLocation(const char *name);
+
   template<class T>
   void SetUniform(const T &val, const char *name = "")
   {
