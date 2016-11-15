@@ -25,33 +25,27 @@ public:
   Camera();
   ~Camera();
 
-  const glm::mat4 & GetViewProject() const;
-
   /// Получить матрицу вида.
   const glm::mat4 &GetView() const;
 
   /// Получить матрицу проекции.
   const glm::mat4 &GetProject() const;
 
-  const glm::mat3 &GetDirection() const;
-
-  void SetPos(const glm::vec3 &pos);
-
-  const glm::vec3 &GetPos() const;
-
-  void Resize(const glm::uvec2 &size);
-
+//   void SetPos(const glm::vec3 &pos);
+// 
+//   const glm::vec3 &GetPos() const;
+  
   /// Повернуть камеру относительно текущей ориентации на заданный угол по трем осям.
   void Rotate(const glm::vec3 &angle);
-
-  void SetRot(const glm::quat &quat);
 
   /// Переместиться, относительно текущего положения и ориентации.
   void Move(const glm::vec3 &dist);
 
+  //void Resize(const glm::uvec2 &size);
+
   void Update();
 
-  glm::vec3 GetRay(const glm::vec2 &pos);
+  //glm::vec3 GetRay(const glm::vec2 &pos);
 
   void CalculateFrustum();
 
@@ -78,7 +72,7 @@ private:
   float mNear;
   float mFar;
 
-  bool changed = true;
+  bool mChanged = true;
 };
 
 #endif // Camera_h__

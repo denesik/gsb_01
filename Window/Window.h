@@ -8,10 +8,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
-#include "Keyboard.h"
-#include "Mouse.h"
 #include <functional>
-
+#include <glm/glm.hpp>
 
 class Window
 {
@@ -38,16 +36,9 @@ public:
   /// Установить имя окна.
   void SetTitle(const std::string &title);
 
-  /// Получить клавиатуру.
-  Keyboard &GetKeyboard();
-
-  /// Получить мышь.
-  Mouse &GetMouse();
+  void SetKeyboardCallback(const std::function<void(int, int, int, int)> &callback);
 
   GLFWwindow *Get();
-
-  void SetResizeCallback(const std::function<void(int, int)> &f);
-
 private:
 
   struct WindowDeleter
@@ -59,14 +50,9 @@ private:
     }
   };
 
-  static void ResizeCallback(GLFWwindow*, int, int);
-  static std::function<void(int, int)> mResf;
+  std::function<void(int, int, int, int)> mKeyboardCallback;
 
   std::unique_ptr<GLFWwindow, WindowDeleter> mWindow;
-
-  std::unique_ptr<Keyboard> mKeyboard;
-
-  std::unique_ptr<Mouse> mMouse;
 
   glm::uvec2 mSize;
 

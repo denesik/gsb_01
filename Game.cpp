@@ -126,12 +126,21 @@ int Game::Run()
     memcpy(buf.Data(), indexCubeSide, buf.Size());
   }
   vao.Compile();
-// 
-//   RenderMeshVao mesh;
-//   auto mAttribute = VertexVT::Get();
-//   auto locations = shader->GetAttributeLocation(mAttribute);
-//   mesh.SetAttribute(mAttribute, locations);
-//   mesh.Compile(reinterpret_cast<float *>(vertexs.data()), vertexs.size(), indexCubeSide, 6);
+
+  struct
+  {
+    std::array<int, GLFW_KEY_LAST + 1> keys;
+  } events_state;
+
+  for (auto &key : events_state.keys)
+  {
+    key = GLFW_RELEASE;
+  }
+
+  mWindow->SetKeyboardCallback([&events_state](int key, int, int action, int)
+  {
+    events_state.keys[key] = action;
+  });
 
   //camera->Move({ 0, 0, 10 });
   //camera->Update();
@@ -145,7 +154,7 @@ int Game::Run()
     Update(currTime - lastTime);
     Draw(currTime - lastTime);
 
-    if (mWindow->GetKeyboard().IsKeyDown(GLFW_KEY_W))
+    if (events_state.keys[GLFW_KEY_W] == GLFW_REPEAT)
     {
       //camera->Move({});
     }
@@ -159,7 +168,7 @@ int Game::Run()
     //shader->SetUniform(TEXTURE_SLOT_0, "atlas");
     //shader->SetUniform(camera->GetViewProject(), "transform_VP");
     uniform.atlas(TEXTURE_SLOT_0);
-    uniform.mat_vp(camera->GetViewProject());
+    uniform.mat_vp(camera->GetProject() * camera->GetView());
     uniform.Bind();
 
     vao.Draw();
@@ -174,15 +183,7 @@ int Game::Run()
 
 void Game::Update(float dt)
 {
-  if (mWindow->GetKeyboard().IsKeyPress(GLFW_KEY_TAB))
-  {
-    mWindow->GetMouse().SetCentring(!mWindow->GetMouse().GetCentring());
-  }
 
-  if (mWindow->GetKeyboard().IsKeyDown(GLFW_KEY_F5))
-  {
-
-  }
 }
 
 

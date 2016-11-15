@@ -15,30 +15,22 @@ Camera::Camera(void)
   mFar = 2000.0f;
   mProjection = glm::perspective(mFov, mAspect, mNear, mFar);
 
-  mQuat = glm::quat_cast(glm::lookAt
-    (
-      glm::vec3(0.0f, 0.0f, 0.0f), // eye
-      glm::vec3(0.0f, 0.0f, -1.0f), // center
-      glm::vec3(0.0f, 1.0f, 0.0f)  // up
-      ));
+  mQuat = glm::quat_cast(glm::lookAt(
+    glm::vec3(0.0f, 0.0f, 0.0f), // eye
+    glm::vec3(0.0f, 0.0f, -1.0f), // center
+    glm::vec3(0.0f, 1.0f, 0.0f)  // up
+    ));
 
-  mView = glm::lookAt
-    (
-      glm::vec3(0.0f, 0.0f, 2.0f), // eye
-      glm::vec3(0.0f, 0.0f, 1.0f), // center
-      glm::vec3(0.0f, 1.0f, 0.0f)  // up
-      );
-  mViewProjection = mProjection * mView;
+  mView = glm::lookAt(
+    glm::vec3(0.0f, 0.0f, 2.0f), // eye
+    glm::vec3(0.0f, 0.0f, 1.0f), // center
+    glm::vec3(0.0f, 1.0f, 0.0f)  // up
+    );
 }
 
 
 Camera::~Camera(void)
 {
-}
-
-const glm::mat4 &Camera::GetViewProject() const
-{
-  return mViewProjection;
 }
 
 const glm::mat4 &Camera::GetView() const
@@ -51,52 +43,39 @@ const glm::mat4 &Camera::GetProject() const
   return mProjection;
 }
 
-const glm::mat3 &Camera::GetDirection() const
-{
-  return mDirection;
-}
+// void Camera::SetPos(const glm::vec3 &pos)
+// {
+//   mChanged = true;
+//   mPos = pos;
+// }
+// 
+// const glm::vec3 & Camera::GetPos() const
+// {
+//   return mPos;
+// }
 
-void Camera::SetPos(const glm::vec3 &pos)
-{
-  changed = true;
-  mPos = pos;
-}
-
-const glm::vec3 & Camera::GetPos() const
-{
-  return mPos;
-}
-
-void Camera::Resize(const glm::uvec2 &size)
-{
-  changed = true;
-  mAspect = static_cast<float>(size.x) / static_cast<float>(size.y);
-  mProjection = glm::perspective(mFov, mAspect, mNear, mFar);
-}
+// void Camera::Resize(const glm::uvec2 &size)
+// {
+//   mChanged = true;
+//   mAspect = static_cast<float>(size.x) / static_cast<float>(size.y);
+//   mProjection = glm::perspective(mFov, mAspect, mNear, mFar);
+// }
 
 void Camera::Rotate(const glm::vec3 &degrees)
 {
-  changed = true;
+  mChanged = true;
   mDir += degrees;
-}
-
-void Camera::SetRot(const glm::quat &quat)
-{
-  changed = true;
-  mQuat = quat;
-  mDir = {};
-  Update();
 }
 
 void Camera::Move(const glm::vec3 &dist)
 {
-  changed = true;
+  mChanged = true;
   mPos += glm::vec3(dist.x, dist.z, -dist.y) * mQuat;
 }
 
 void Camera::Update()
 {
-  if (!changed)
+  if (!mChanged)
     return;
   const auto &pitch = glm::angleAxis(mDir.x, glm::vec3(1, 0, 0));
   const auto &yaw = glm::angleAxis(mDir.z, glm::vec3(0, 0, 1));
@@ -107,22 +86,23 @@ void Camera::Update()
   mQuat = glm::normalize(mQuat);
 
   mView = glm::translate(glm::mat4_cast(mQuat), -mPos);
-  mViewProjection = mProjection * mView;
   mDirection = glm::mat3_cast(mQuat);
 
-  CalculateFrustum();
-  changed = false;
+  //CalculateFrustum();
+  mChanged = false;
 }
 
-glm::vec3 Camera::GetRay(const glm::vec2 &pos)
+// glm::vec3 Camera::GetRay(const glm::vec2 &pos)
+// {
+//   glm::vec3 near = glm::unProject(glm::vec3(pos.x, 600.0f - pos.y, 0.0f), mView, mProjection, glm::vec4(0, 0, 600.0, 600));
+//   glm::vec3 far = glm::unProject(glm::vec3(pos.x, 600.0f - pos.y, 1.0f), mView, mProjection, glm::vec4(0, 0, 600.0, 600));
+//   return glm::normalize(far - near);
+// }
+
+void NormalizePlane(float frustum[6][4], int side) 
 {
-  glm::vec3 near = glm::unProject(glm::vec3(pos.x, 600.0f - pos.y, 0.0f), mView, mProjection, glm::vec4(0, 0, 600.0, 600));
-  glm::vec3 far = glm::unProject(glm::vec3(pos.x, 600.0f - pos.y, 1.0f), mView, mProjection, glm::vec4(0, 0, 600.0, 600));
-  return glm::normalize(far - near);
-}
-
-void NormalizePlane(float frustum[6][4], int side) {
-  float magnitude = (float)sqrt((frustum[side][0] * frustum[side][0]) +
+  float magnitude = sqrt(
+    (frustum[side][0] * frustum[side][0]) +
     (frustum[side][1] * frustum[side][1]) +
     (frustum[side][2] * frustum[side][2]));
   frustum[side][0] /= magnitude;
