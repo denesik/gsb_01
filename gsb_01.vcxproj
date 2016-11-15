@@ -123,6 +123,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\Entity.cpp" />
+    <ClCompile Include="core\World.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="main.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="Render\Bitmap.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Color.cpp" />
+    <ClCompile Include="Render\MeshManager.cpp" />
     <ClCompile Include="Render\OpenGLCall.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Render\RenderMeshVao.cpp" />
@@ -140,6 +142,7 @@
     <ClCompile Include="Render\VertexArray.cpp" />
     <ClCompile Include="tools\FpsCounter.cpp" />
     <ClCompile Include="tools\Log.cpp" />
+    <ClCompile Include="tools\tiny_obj_loader.cpp" />
     <ClCompile Include="Window\Keyboard.cpp" />
     <ClCompile Include="Window\Mouse.cpp" />
     <ClCompile Include="Window\Window.cpp" />
@@ -147,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="core\Entity.h" />
+    <ClInclude Include="core\World.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="lodepng\lodepng.h" />
@@ -156,6 +160,8 @@
     <ClInclude Include="Render\Color.h" />
     <ClInclude Include="Render\ErrorImage.h" />
     <ClInclude Include="Render\IRenderMeshStrategy.h" />
+    <ClInclude Include="Render\IRenderResource.h" />
+    <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="Render\OpenGLCall.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Render\RenderMeshVao.h" />
@@ -170,6 +176,7 @@
     <ClInclude Include="tools\FpsCounter.h" />
     <ClInclude Include="tools\Log.h" />
     <ClInclude Include="tools\thread_vane.h" />
+    <ClInclude Include="tools\tiny_obj_loader.h" />
     <ClInclude Include="Window\Keyboard.h" />
     <ClInclude Include="Window\Mouse.h" />
     <ClInclude Include="Window\Window.h" />

@@ -74,6 +74,15 @@
     <ClCompile Include="tools\FpsCounter.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="core\World.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MeshManager.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\tiny_obj_loader.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Atlas.h">
@@ -158,6 +167,16 @@
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
     <ClInclude Include="tools\FpsCounter.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="core\World.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\IRenderResource.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\MeshManager.h" />
+    <ClInclude Include="tools\tiny_obj_loader.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
   </ItemGroup>

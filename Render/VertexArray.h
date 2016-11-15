@@ -6,6 +6,7 @@
 #include "Vertex.h"
 #include <stdint.h>
 #include <memory>
+#include "IRenderResource.h"
 
 class VertexBuffer
 {
@@ -60,7 +61,7 @@ private:
   void Draw();
 };
 
-class VertexArray
+class VertexArray : public IRenderResource
 {
 public:
   VertexArray();
@@ -70,11 +71,11 @@ public:
 
   IndexBuffer &CreateIndexBuffer(size_t size);
 
-  void Compile();
+  void Compile() override;
 
   void Draw();
 
-  void Release();
+  void Release() override;
 
 private:
   unsigned int mVao = 0;

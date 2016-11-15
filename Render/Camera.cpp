@@ -49,7 +49,7 @@ void Camera::SetQuat(const glm::quat &quat)
 {
   mChanged = true;
   mQuat = quat;
-  mDir = {};
+  //mDir = {};
 }
 
 // void Camera::SetPos(const glm::vec3 &pos)

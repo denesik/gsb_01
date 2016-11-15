@@ -23,6 +23,7 @@
 #include "Render/UniformBase.h"
 #include "core/Entity.h"
 #include "tools/FpsCounter.h"
+#include "Render/MeshManager.h"
 
 
 Game::Game()
@@ -41,38 +42,6 @@ Game::~Game()
   Window::WindowSystemFinally();
 }
 
-static glm::vec3 vertexCube[] =
-{
-  { 0.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f }, // front
-  { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 1.0f },{ 1.0f, 1.0f, 1.0f },{ 1.0f, 1.0f, 0.0f }, // right 
-  { 1.0f, 1.0f, 0.0f },{ 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f }, // back
-  { 0.0f, 1.0f, 0.0f },{ 0.0f, 1.0f, 1.0f },{ 0.0f, 0.0f, 1.0f },{ 0.0f, 0.0f, 0.0f }, // left
-  { 0.0f, 0.0f, 1.0f },{ 0.0f, 1.0f, 1.0f },{ 1.0f, 1.0f, 1.0f },{ 1.0f, 0.0f, 1.0f }, // top
-  { 0.0f, 1.0f, 0.0f },{ 0.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 1.0f, 0.0f }  // bot
-};
-
-static glm::vec3 normalCube[] =
-{
-  { 0.0f, -1.0f,  0.0f }, // front
-  { 1.0f,  0.0f,  0.0f }, // right 
-  { 0.0f,  1.0f,  0.0f }, // back
-  { -1.0f,  0.0f,  0.0f }, // left
-  { 0.0f,  0.0f,  1.0f }, // top
-  { 0.0f,  0.0f, -1.0f }, // bot
-};
-
-
-static uint32_t indexCubeSide[] =
-{
-  0, 1, 2, 2, 3, 0
-};
-
-static glm::vec2 textureCube[] =
-{
-  { 0.0f, 0.0f },{ 0.0f, 1.0f },{ 1.0f, 1.0f },{ 1.0f, 0.0f }
-};
-
-
 int Game::Run()
 {
   if (!Initialized)
@@ -90,13 +59,15 @@ int Game::Run()
   mTextureManager.LoadDirectory("data\\textures\\");
   mTextureManager.Compile();
 
+  MeshManager mMeshManager;
+  mMeshManager.LoadDirectory("data\\meshes\\");
+  mMeshManager.Compile();
+
   auto texture = mTextureManager.GetTexture("data\\textures\\test_texture.png");
 
   Shader shader;
-  shader.BuildBody("data\\basic.glsl");
-  shader.BuildType(GL_FRAGMENT_SHADER);
-  shader.BuildType(GL_VERTEX_SHADER);
-  shader.Link();
+  shader.LoadFromFile("data\\basic.glsl");
+  shader.Compile();
 
   UniformBasic uniform;
   uniform.AttachShader(shader);
@@ -105,27 +76,7 @@ int Game::Run()
 
   auto uv = mTextureManager.GetTextureUV("data\\textures\\test_texture.png");
 
-  std::vector<VertexVT> vertexs;
-  vertexs.push_back({ vertexCube[0],{ uv.x, uv.y } });
-  vertexs.push_back({ vertexCube[1],{ uv.z, uv.y } });
-  vertexs.push_back({ vertexCube[2],{ uv.z, uv.w } });
-  vertexs.push_back({ vertexCube[3],{ uv.x, uv.w } });
-
-
-  VertexArray vao;
-  {
-    auto &buf = vao.CreateBuffer(vertexs.size() * sizeof(VertexVT));
-    memcpy(buf.Data(), vertexs.data(), buf.Size());
-    for (auto &attibute : VertexVT::Get())
-    {
-      buf.SetAttibute(attibute);
-    }
-  }
-  {
-    auto &buf = vao.CreateIndexBuffer(6 * sizeof(uint32_t));
-    memcpy(buf.Data(), indexCubeSide, buf.Size());
-  }
-  vao.Compile();
+  auto vao = mMeshManager.GetMesh("data\\meshes\\cube.obj");
 
   struct
   {
@@ -183,7 +134,7 @@ int Game::Run()
     uniform.mat_vp(camera.GetProject() * camera.GetView());
     uniform.Bind();
 
-    vao.Draw();
+    vao->Draw();
     //mesh.Draw();
 
     mWindow->Update();

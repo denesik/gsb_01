@@ -31,6 +31,25 @@ Shader::~Shader(void)
   LOG(trace) << "deleting program" << mProgram;
 }
 
+bool Shader::LoadFromFile(const std::string &name)
+{
+  mFilename = name;
+  return true;
+}
+
+void Shader::Compile()
+{
+  BuildBody(mFilename);
+  BuildType(GL_FRAGMENT_SHADER);
+  BuildType(GL_VERTEX_SHADER);
+  Link();
+}
+
+void Shader::Release()
+{
+
+}
+
 void Shader::BuildType(int type)
 {
   std::stringstream ss;

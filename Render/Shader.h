@@ -11,16 +11,27 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 #include "Vertex.h"
+#include "IRenderResource.h"
 
 class Shader;
-typedef std::shared_ptr<Shader> PShader;
+typedef Shader * PShader;
 
 /// Шейдер.
-class Shader
+class Shader : public IRenderResource
 {
 public:
   Shader();
   ~Shader();
+
+  /// Загрузить данные из файла в озу. 
+  bool LoadFromFile(const std::string &name);
+
+  /// Загрузить данные в гпу.
+  /// Данные из озу удаляются.
+  void Compile() override;
+
+  /// Удалить данные из гпу.
+  void Release() override;
 
   /// Установить шейдер.
   void Use();
@@ -107,6 +118,8 @@ private:
   std::string version = "#version 330 core";
   bool source_loaded = false;
   std::string body;
+
+  std::string mFilename;
 };
 
 #endif // Shader_h__
