@@ -90,18 +90,16 @@ int Game::Run()
 
   auto texture = mTextureManager.GetTexture("data\\textures\\test_texture.png");
 
-  auto shader = std::make_shared<Shader>();
-  shader->BuildBody("data\\basic.glsl");
-  shader->BuildType(GL_FRAGMENT_SHADER);
-  shader->BuildType(GL_VERTEX_SHADER);
-  shader->Link();
+  Shader shader;
+  shader.BuildBody("data\\basic.glsl");
+  shader.BuildType(GL_FRAGMENT_SHADER);
+  shader.BuildType(GL_VERTEX_SHADER);
+  shader.Link();
 
   UniformBasic uniform;
-  uniform.AttachShader(*shader);
+  uniform.AttachShader(shader);
 
-  auto camera = std::make_shared<Camera>();
-  //camera->Move({});
-
+  Camera camera;
 
   auto uv = mTextureManager.GetTextureUV("data\\textures\\test_texture.png");
 
@@ -142,9 +140,6 @@ int Game::Run()
     events_state.keys[key] = action;
   });
 
-  //camera->Move({ 0, 0, 10 });
-  //camera->Update();
-
   auto currTime = static_cast<float>(glfwGetTime());
   while (!mWindow->WindowShouldClose())
   {
@@ -154,21 +149,27 @@ int Game::Run()
     Update(currTime - lastTime);
     Draw(currTime - lastTime);
 
-    if (events_state.keys[GLFW_KEY_W] == GLFW_REPEAT)
-    {
-      //camera->Move({});
-    }
+    if (events_state.keys[GLFW_KEY_W] == GLFW_REPEAT) camera.Move({ 0, 0, -0.001 });
+    if (events_state.keys[GLFW_KEY_S] == GLFW_REPEAT) camera.Move({ 0, 0, 0.001 });
+    if (events_state.keys[GLFW_KEY_A] == GLFW_REPEAT) camera.Move({ -0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_D] == GLFW_REPEAT) camera.Move({ 0.001, 0, 0 });
 
+    if (events_state.keys[GLFW_KEY_UP] == GLFW_REPEAT) camera.Rotate({ -0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_DOWN] == GLFW_REPEAT) camera.Rotate({ 0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_LEFT] == GLFW_REPEAT) camera.Rotate({ 0, -0.001, 0 });
+    if (events_state.keys[GLFW_KEY_RIGHT] == GLFW_REPEAT) camera.Rotate({ 0, 0.001, 0 });
+
+    camera.Update();
 
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));     // Очистка экрана
 
     texture->Set(TEXTURE_SLOT_0);
-    shader->Use();
+    shader.Use();
 
     //shader->SetUniform(TEXTURE_SLOT_0, "atlas");
     //shader->SetUniform(camera->GetViewProject(), "transform_VP");
     uniform.atlas(TEXTURE_SLOT_0);
-    uniform.mat_vp(camera->GetProject() * camera->GetView());
+    uniform.mat_vp(camera.GetProject() * camera.GetView());
     uniform.Bind();
 
     vao.Draw();

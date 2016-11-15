@@ -16,16 +16,12 @@ Camera::Camera(void)
   mProjection = glm::perspective(mFov, mAspect, mNear, mFar);
 
   mQuat = glm::quat_cast(glm::lookAt(
-    glm::vec3(0.0f, 0.0f, 0.0f), // eye
-    glm::vec3(0.0f, 0.0f, -1.0f), // center
+    glm::vec3(0.0f, 0.0f, 1.0f), // eye
+    glm::vec3(0.0f, 0.0f, 0.0f), // center
     glm::vec3(0.0f, 1.0f, 0.0f)  // up
     ));
 
-  mView = glm::lookAt(
-    glm::vec3(0.0f, 0.0f, 2.0f), // eye
-    glm::vec3(0.0f, 0.0f, 1.0f), // center
-    glm::vec3(0.0f, 1.0f, 0.0f)  // up
-    );
+  mPos = { 0, 0, 5 };
 }
 
 
@@ -70,7 +66,7 @@ void Camera::Rotate(const glm::vec3 &degrees)
 void Camera::Move(const glm::vec3 &dist)
 {
   mChanged = true;
-  mPos += glm::vec3(dist.x, dist.z, -dist.y) * mQuat;
+  mPos += glm::vec3(dist.x, dist.y, dist.z) * mQuat;
 }
 
 void Camera::Update()
@@ -78,8 +74,8 @@ void Camera::Update()
   if (!mChanged)
     return;
   const auto &pitch = glm::angleAxis(mDir.x, glm::vec3(1, 0, 0));
-  const auto &yaw = glm::angleAxis(mDir.z, glm::vec3(0, 0, 1));
-  const auto &roll = glm::angleAxis(mDir.y, glm::vec3(0, 1, 0));
+  const auto &yaw = glm::angleAxis(mDir.y, glm::vec3(0, 1, 0));
+  const auto &roll = glm::angleAxis(mDir.z, glm::vec3(0, 0, -1));
   mDir = {};
 
   mQuat = pitch * mQuat * yaw;
