@@ -122,6 +122,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="main.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="Render\TextureManager.cpp" />
     <ClCompile Include="Render\UniformBase.cpp" />
     <ClCompile Include="Render\VertexArray.cpp" />
+    <ClCompile Include="tools\FpsCounter.cpp" />
     <ClCompile Include="tools\Log.cpp" />
     <ClCompile Include="Window\Keyboard.cpp" />
     <ClCompile Include="Window\Mouse.cpp" />
@@ -144,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoordSystem.h" />
+    <ClInclude Include="core\Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="lodepng\lodepng.h" />
@@ -164,6 +167,7 @@
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Render\VertexArray.h" />
     <ClInclude Include="Render\VertexTools.h" />
+    <ClInclude Include="tools\FpsCounter.h" />
     <ClInclude Include="tools\Log.h" />
     <ClInclude Include="tools\thread_vane.h" />
     <ClInclude Include="Window\Keyboard.h" />

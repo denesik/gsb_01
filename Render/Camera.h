@@ -28,10 +28,12 @@ public:
   /// Получить матрицу проекции.
   const glm::mat4 &GetProject() const;
 
-//   void SetPos(const glm::vec3 &pos);
-// 
+  void SetPos(const glm::vec3 &pos);
+
 //   const glm::vec3 &GetPos() const;
-  
+
+  void SetQuat(const glm::quat &quat);
+
   /// Повернуть камеру относительно текущей ориентации на заданный угол по трем осям.
   void Rotate(const glm::vec3 &angle);
 
@@ -56,7 +58,6 @@ private:
   glm::mat4 mView;
   glm::mat4 mProjection;
   glm::mat4 mViewProjection;
-  glm::mat3 mDirection;
 
   glm::vec3 mDir;
   glm::vec3 mPos;

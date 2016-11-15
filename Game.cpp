@@ -21,6 +21,8 @@
 #include "Render/OpenGLCall.h"
 #include "Render/VertexArray.h"
 #include "Render/UniformBase.h"
+#include "core/Entity.h"
+#include "tools/FpsCounter.h"
 
 
 Game::Game()
@@ -137,28 +139,37 @@ int Game::Run()
 
   mWindow->SetKeyboardCallback([&events_state](int key, int, int action, int)
   {
+    if (action == GLFW_PRESS) action = GLFW_REPEAT;
     events_state.keys[key] = action;
   });
 
+  Entity player;
+
+  FpsCounter fps;
   auto currTime = static_cast<float>(glfwGetTime());
   while (!mWindow->WindowShouldClose())
   {
+    fps.Update();
+    mWindow->SetTitle(std::to_string(fps.GetCount()) + " fps");
     auto lastTime = currTime;
     currTime = static_cast<float>(glfwGetTime());
     
     Update(currTime - lastTime);
     Draw(currTime - lastTime);
 
-    if (events_state.keys[GLFW_KEY_W] == GLFW_REPEAT) camera.Move({ 0, 0, -0.001 });
-    if (events_state.keys[GLFW_KEY_S] == GLFW_REPEAT) camera.Move({ 0, 0, 0.001 });
-    if (events_state.keys[GLFW_KEY_A] == GLFW_REPEAT) camera.Move({ -0.001, 0, 0 });
-    if (events_state.keys[GLFW_KEY_D] == GLFW_REPEAT) camera.Move({ 0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_W] == GLFW_REPEAT) player.Move({ 0, 0, -0.001 });
+    if (events_state.keys[GLFW_KEY_S] == GLFW_REPEAT) player.Move({ 0, 0, 0.001 });
+    if (events_state.keys[GLFW_KEY_A] == GLFW_REPEAT) player.Move({ -0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_D] == GLFW_REPEAT) player.Move({ 0.001, 0, 0 });
 
-    if (events_state.keys[GLFW_KEY_UP] == GLFW_REPEAT) camera.Rotate({ -0.001, 0, 0 });
-    if (events_state.keys[GLFW_KEY_DOWN] == GLFW_REPEAT) camera.Rotate({ 0.001, 0, 0 });
-    if (events_state.keys[GLFW_KEY_LEFT] == GLFW_REPEAT) camera.Rotate({ 0, -0.001, 0 });
-    if (events_state.keys[GLFW_KEY_RIGHT] == GLFW_REPEAT) camera.Rotate({ 0, 0.001, 0 });
+    if (events_state.keys[GLFW_KEY_UP] == GLFW_REPEAT) player.Rotate({ -0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_DOWN] == GLFW_REPEAT) player.Rotate({ 0.001, 0, 0 });
+    if (events_state.keys[GLFW_KEY_LEFT] == GLFW_REPEAT) player.Rotate({ 0, -0.001, 0 });
+    if (events_state.keys[GLFW_KEY_RIGHT] == GLFW_REPEAT) player.Rotate({ 0, 0.001, 0 });
 
+    player.Update();
+    camera.SetPos(player.GetPos());
+    camera.SetQuat(player.GetQuat());
     camera.Update();
 
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));     // Очистка экрана

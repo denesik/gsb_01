@@ -15,11 +15,11 @@ Camera::Camera(void)
   mFar = 2000.0f;
   mProjection = glm::perspective(mFov, mAspect, mNear, mFar);
 
-  mQuat = glm::quat_cast(glm::lookAt(
-    glm::vec3(0.0f, 0.0f, 1.0f), // eye
-    glm::vec3(0.0f, 0.0f, 0.0f), // center
-    glm::vec3(0.0f, 1.0f, 0.0f)  // up
-    ));
+//   mQuat = glm::quat_cast(glm::lookAt(
+//     glm::vec3(0.0f, 0.0f, 1.0f), // eye
+//     glm::vec3(0.0f, 0.0f, 0.0f), // center
+//     glm::vec3(0.0f, 1.0f, 0.0f)  // up
+//     ));
 
   mPos = { 0, 0, 5 };
 }
@@ -37,6 +37,19 @@ const glm::mat4 &Camera::GetView() const
 const glm::mat4 &Camera::GetProject() const
 {
   return mProjection;
+}
+
+void Camera::SetPos(const glm::vec3 &pos)
+{
+  mChanged = true;
+  mPos = pos;
+}
+
+void Camera::SetQuat(const glm::quat &quat)
+{
+  mChanged = true;
+  mQuat = quat;
+  mDir = {};
 }
 
 // void Camera::SetPos(const glm::vec3 &pos)
@@ -82,7 +95,6 @@ void Camera::Update()
   mQuat = glm::normalize(mQuat);
 
   mView = glm::translate(glm::mat4_cast(mQuat), -mPos);
-  mDirection = glm::mat3_cast(mQuat);
 
   //CalculateFrustum();
   mChanged = false;
