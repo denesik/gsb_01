@@ -131,7 +131,7 @@
     <ClCompile Include="Render\Bitmap.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Color.cpp" />
-    <ClCompile Include="Render\MeshManager.cpp" />
+    <ClCompile Include="Render\ModelManager.cpp" />
     <ClCompile Include="Render\OpenGLCall.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Render\RenderMeshVao.cpp" />
@@ -161,7 +161,8 @@
     <ClInclude Include="Render\ErrorImage.h" />
     <ClInclude Include="Render\IRenderMeshStrategy.h" />
     <ClInclude Include="Render\IRenderResource.h" />
-    <ClInclude Include="Render\MeshManager.h" />
+    <ClInclude Include="Render\Model.h" />
+    <ClInclude Include="Render\ModelManager.h" />
     <ClInclude Include="Render\OpenGLCall.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Render\RenderMeshVao.h" />

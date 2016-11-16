@@ -23,7 +23,7 @@
 #include "Render/UniformBase.h"
 #include "core/Entity.h"
 #include "tools/FpsCounter.h"
-#include "Render/MeshManager.h"
+#include "Render/ModelManager.h"
 
 
 Game::Game()
@@ -54,16 +54,9 @@ int Game::Run()
 
   Render render;
 
-  TextureManager mTextureManager;
-
-  mTextureManager.LoadDirectory("data\\textures\\");
-  mTextureManager.Compile();
-
-  MeshManager mMeshManager;
-  mMeshManager.LoadDirectory("data\\meshes\\");
-  mMeshManager.Compile();
-
-  auto texture = mTextureManager.GetTexture("data\\textures\\test_texture.png");
+  ModelManager mModelManager;
+  mModelManager.LoadDirectory("data\\models\\");
+  mModelManager.Compile();
 
   Shader shader;
   shader.LoadFromFile("data\\basic.glsl");
@@ -74,9 +67,8 @@ int Game::Run()
 
   Camera camera;
 
-  auto uv = mTextureManager.GetTextureUV("data\\textures\\test_texture.png");
-
-  auto vao = mMeshManager.GetMesh("data\\meshes\\cube.obj");
+  auto model = mModelManager.GetModel("data\\models\\cube.mdl");
+  model->shader = &shader;
 
   struct
   {
@@ -125,8 +117,8 @@ int Game::Run()
 
     GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));     // Очистка экрана
 
-    texture->Set(TEXTURE_SLOT_0);
-    shader.Use();
+    model->texture->Set(TEXTURE_SLOT_0);
+    model->shader->Use();
 
     //shader->SetUniform(TEXTURE_SLOT_0, "atlas");
     //shader->SetUniform(camera->GetViewProject(), "transform_VP");
@@ -134,8 +126,7 @@ int Game::Run()
     uniform.mat_vp(camera.GetProject() * camera.GetView());
     uniform.Bind();
 
-    vao->Draw();
-    //mesh.Draw();
+    model->vertexArray->Draw();
 
     mWindow->Update();
 	  //std::this_thread::sleep_for(std::chrono::milliseconds(1)); ?!
