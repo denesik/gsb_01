@@ -103,8 +103,13 @@ void TextureManager::Compile()
       { pos.x + pos.z, pos.y + pos.w },
     };
     glm::vec2 scale(1.0f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].texture->GetSize())));
+    glm::vec2 offset(0.01f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].texture->GetSize())));
+
     coord[0] *= scale;
     coord[1] *= scale;
+
+    //coord[0] -= offset;
+    coord[1] -= offset; // bug Почему то нужно сместить верхнюю правую координату чуть влево, что б не вылезти за границы текстуры.
 
     texture.second.uv = { coord[0].x, coord[0].y, coord[1].x, coord[1].y };
   }
