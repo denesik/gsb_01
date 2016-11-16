@@ -4,6 +4,7 @@
 #include <boost\filesystem.hpp>
 #include <fstream>
 #include "..\rapidjson\document.h"
+#include <boost/algorithm/string/replace.hpp>
 
 ModelManager::ModelManager()
 {
@@ -43,8 +44,8 @@ VertexArray *ModelManager::LoadMesh(const std::string &name, const glm::vec4 &uv
       data[offset] = shapes[0].mesh.positions[i * 3 + 0]; ++offset;
       data[offset] = shapes[0].mesh.positions[i * 3 + 1]; ++offset;
       data[offset] = shapes[0].mesh.positions[i * 3 + 2]; ++offset;
-      data[offset] = shapes[0].mesh.texcoords[i * 2 + 0]; ++offset;
-      data[offset] = shapes[0].mesh.texcoords[i * 2 + 1]; ++offset;
+      data[offset] = shapes[0].mesh.texcoords[i * 2 + 0] * (uv.z - uv.x) + uv.x; ++offset;
+      data[offset] = shapes[0].mesh.texcoords[i * 2 + 1] * (uv.w - uv.y) + uv.y; ++offset;
       data[offset] = shapes[0].mesh.normals[i * 3 + 0]; ++offset;
       data[offset] = shapes[0].mesh.normals[i * 3 + 1]; ++offset;
       data[offset] = shapes[0].mesh.normals[i * 3 + 2]; ++offset;
@@ -90,13 +91,13 @@ void ModelManager::LoadModel(const std::string &name)
     glm::vec4 uv;
     if (document.HasMember("texture"))
     {
-      auto texture = document["texture"].GetString();
+      std::string texture(document["texture"].GetString());
       uv = mTextureManager.GetTextureUV(texture);
       model.texture = mTextureManager.GetTexture(texture);
     }
     if (document.HasMember("mesh"))
     {
-      auto mesh = document["mesh"].GetString();
+      std::string mesh(document["mesh"].GetString());
       model.vertexArray = LoadMesh(mesh, uv);
       model.vertexArray->Compile();
     }

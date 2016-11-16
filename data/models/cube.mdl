@@ -1,4 +1,4 @@
 {
-    "texture": "data\\textures\\test_texture.png",
+	"texture": "data\\textures\\test_texture.png",
 	"mesh": "data\\models\\cube.obj"
 }
