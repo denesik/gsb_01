@@ -77,10 +77,10 @@
     <ClCompile Include="core\World.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Render\MeshManager.cpp">
+    <ClCompile Include="tools\tiny_obj_loader.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="tools\tiny_obj_loader.cpp">
+    <ClCompile Include="Render\ModelManager.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,10 +175,11 @@
     <ClInclude Include="Render\IRenderResource.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
-    <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="tools\tiny_obj_loader.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ModelManager.h" />
+    <ClInclude Include="Render\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
