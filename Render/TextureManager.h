@@ -19,7 +19,7 @@
 class TextureManager
 {
 public:
-  TextureManager();
+  TextureManager(const glm::uvec2 &size);
   
   /// Загрузить указанную текстуру.
   void LoadTexture(const std::string &name);
@@ -37,6 +37,7 @@ public:
   void Compile();
 
 private:
+  glm::uvec2 mSize;
 
   struct AtlasChunk
   {
@@ -47,8 +48,8 @@ private:
 
   struct AtlasTexture
   {
-    AtlasTexture()
-      : atlas({ 64, 64 })
+    AtlasTexture(const glm::uvec2 &size)
+      : atlas(size)
     {};
     Atlas atlas;
     std::unique_ptr<Texture> texture;

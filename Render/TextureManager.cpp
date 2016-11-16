@@ -9,9 +9,10 @@
 #include "ErrorImage.h"
 #include "..\tools\Log.h"
 
-TextureManager::TextureManager()
+TextureManager::TextureManager(const glm::uvec2 &size)
+  : mSize(size)
 {
-  mMultiAtlas.resize(1);
+  mMultiAtlas.emplace_back(mSize);
   Bitmap bitmap(glm::uvec2(error_image.width, error_image.height), 
     reinterpret_cast<const unsigned char *>(error_image.pixel_data));
   auto pos = mMultiAtlas[0].atlas.Add(error_image.name, bitmap);
@@ -30,7 +31,7 @@ void TextureManager::LoadTexture(const std::string &name)
   }
   // Мы пытались, но не смоги...
   // Попробуем создать еще один атлас.
-  mMultiAtlas.resize(mMultiAtlas.size() + 1);
+  mMultiAtlas.emplace_back(mSize);
   if (!LoadToAtlas(mMultiAtlas.size() - 1, name))
   {
     // Ошибка.

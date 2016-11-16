@@ -42,7 +42,7 @@ Window::Window(const glm::uvec2 &size)
   {
     Window *window = static_cast<Window *>(glfwGetWindowUserPointer(win));
     assert(window);
-    if (window->mKeyboardCallback) window->mKeyboardCallback(key, scancode, action, mods);
+    if (window->mKeyboardCallback && key > 0) window->mKeyboardCallback(key, scancode, action, mods);
     //ImGui_ImplGlfwGL3_KeyCallback(win, key, scancode, action, mods);
   });
   /*

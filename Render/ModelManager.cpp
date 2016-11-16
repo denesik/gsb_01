@@ -7,6 +7,7 @@
 #include <boost/algorithm/string/replace.hpp>
 
 ModelManager::ModelManager()
+  : mTextureManager({ 1024, 1024 })
 {
 }
 
