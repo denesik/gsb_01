@@ -102,6 +102,11 @@ void ModelManager::LoadModel(const std::string &name)
       model.vertexArray = LoadMesh(mesh, uv);
       model.vertexArray->Compile();
     }
+    if (document.HasMember("shader"))
+    {
+      std::string shader(document["shader"].GetString());
+      model.shader = mShaderManager.GetShader(shader);
+    }
   }
 }
 
@@ -109,11 +114,12 @@ void ModelManager::LoadDirectory(const std::string &dir)
 {
   mTextureManager.LoadDirectory("data\\textures\\");
   mTextureManager.Compile();
+  mShaderManager.LoadDirectory("data\\shaders\\");
+  mShaderManager.Compile();
 
   boost::filesystem::path targetDir(dir);
   boost::filesystem::recursive_directory_iterator iter(targetDir);
 
-  int loaded = 0;
   for (const boost::filesystem::path &file : iter)
   {
     if (boost::filesystem::is_regular_file(file) && boost::filesystem::extension(file) == ".mdl")
@@ -125,13 +131,13 @@ void ModelManager::LoadDirectory(const std::string &dir)
 
 Model * ModelManager::GetModel(const std::string &name)
 {
-  auto itMesh = mModels.find(name);
-  if (itMesh == mModels.end())
+  auto it = mModels.find(name);
+  if (it == mModels.end())
   {
     return nullptr;
   }
 
-  return &(itMesh->second);
+  return &(it->second);
 }
 
 void ModelManager::Compile()

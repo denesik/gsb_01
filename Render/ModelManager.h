@@ -7,6 +7,7 @@
 #include "Model.h"
 #include <unordered_map>
 #include "TextureManager.h"
+#include "ShaderManager.h"
 
 
 class ModelManager
@@ -25,7 +26,8 @@ public:
 
 private:
   TextureManager mTextureManager;
-  
+  ShaderManager mShaderManager;
+
   std::unordered_map<std::string, Model> mModels;
 
 private:

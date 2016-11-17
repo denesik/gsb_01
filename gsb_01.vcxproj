@@ -136,6 +136,7 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Render\RenderMeshVao.cpp" />
     <ClCompile Include="Render\Shader.cpp" />
+    <ClCompile Include="Render\ShaderManager.cpp" />
     <ClCompile Include="Render\Texture.cpp" />
     <ClCompile Include="Render\TextureManager.cpp" />
     <ClCompile Include="Render\UniformBase.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Render\RenderMeshVao.h" />
     <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="Render\ShaderManager.h" />
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\TextureManager.h" />
     <ClInclude Include="Render\UniformBase.h" />

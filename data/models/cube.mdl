@@ -1,4 +1,5 @@
 {
 	"texture": "data\\textures\\test_texture.png",
-	"mesh": "data\\models\\cube.obj"
+	"mesh": "data\\models\\cube.obj",
+	"shader": "data\\shaders\\basic.glsl"
 }

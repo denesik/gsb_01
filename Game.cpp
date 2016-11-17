@@ -58,17 +58,12 @@ int Game::Run()
   mModelManager.LoadDirectory("data\\models\\");
   mModelManager.Compile();
 
-  Shader shader;
-  shader.LoadFromFile("data\\basic.glsl");
-  shader.Compile();
-
-  UniformBasic uniform;
-  uniform.AttachShader(shader);
-
   Camera camera;
 
   auto model = mModelManager.GetModel("data\\models\\cube.mdl");
-  model->shader = &shader;
+
+  UniformBasic uniform;
+  uniform.AttachShader(*model->shader);
 
   struct
   {

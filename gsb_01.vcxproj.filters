@@ -83,6 +83,9 @@
     <ClCompile Include="Render\ModelManager.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="Render\ShaderManager.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Atlas.h">
@@ -180,6 +183,7 @@
     </ClInclude>
     <ClInclude Include="Render\ModelManager.h" />
     <ClInclude Include="Render\Model.h" />
+    <ClInclude Include="Render\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
