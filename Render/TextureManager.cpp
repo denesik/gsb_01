@@ -90,9 +90,13 @@ void TextureManager::Compile()
   {
     mMultiAtlas[i].texture = std::make_unique<Texture>(mMultiAtlas[i].atlas.GetAtlas(), false);
     mMultiAtlas[i].texture->GenMipmap();
-    mMultiAtlas[i].atlas.GetAtlas().Save("atlas.png");
+    //mMultiAtlas[i].atlas.GetAtlas().Save("atlas.png");
   }
+  LOG(trace) << "done";
+}
 
+void TextureManager::GenerateUV()
+{
   for (auto &texture : mTextures)
   {
     const auto &pos = texture.second.pos;
@@ -102,8 +106,8 @@ void TextureManager::Compile()
       { pos.x,         pos.y },
       { pos.x + pos.z, pos.y + pos.w },
     };
-    glm::vec2 scale(1.0f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].texture->GetSize())));
-    glm::vec2 offset(0.01f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].texture->GetSize())));
+    glm::vec2 scale(1.0f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].atlas.GetAtlas().GetSize())));
+    glm::vec2 offset(0.01f / (static_cast<glm::vec2>(mMultiAtlas[texture.second.index].atlas.GetAtlas().GetSize())));
 
     coord[0] *= scale;
     coord[1] *= scale;
@@ -113,8 +117,6 @@ void TextureManager::Compile()
 
     texture.second.uv = { coord[0].x, coord[0].y, coord[1].x, coord[1].y };
   }
-
-  LOG(trace) << "done";
 }
 
 bool TextureManager::LoadToAtlas(size_t atlas, const std::string &name)

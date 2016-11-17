@@ -20,9 +20,6 @@ class TextureManager
 {
 public:
   TextureManager(const glm::uvec2 &size);
-  
-  /// Загрузить указанную текстуру.
-  void LoadTexture(const std::string &name);
 
   /// Загрузить все текстуры в директории.
   void LoadDirectory(const std::string &directory);
@@ -35,6 +32,9 @@ public:
 
   /// Создает текстуры в графической памяти.
   void Compile();
+
+  /// Формирует текстурные координаты.
+  void GenerateUV();
 
 private:
   glm::uvec2 mSize;
@@ -60,8 +60,10 @@ private:
   std::unordered_map<std::string, AtlasChunk> mTextures;
 
 private:
-  bool LoadToAtlas(size_t atlas, const std::string &name);
+  /// Загрузить указанную текстуру.
+  void LoadTexture(const std::string &name);
 
+  bool LoadToAtlas(size_t atlas, const std::string &name);
 };
 
 

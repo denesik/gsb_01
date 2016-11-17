@@ -100,7 +100,6 @@ void ModelManager::LoadModel(const std::string &name)
     {
       std::string mesh(document["mesh"].GetString());
       model.vertexArray = LoadMesh(mesh, uv);
-      model.vertexArray->Compile();
     }
     if (document.HasMember("shader"))
     {
@@ -113,9 +112,8 @@ void ModelManager::LoadModel(const std::string &name)
 void ModelManager::LoadDirectory(const std::string &dir)
 {
   mTextureManager.LoadDirectory("data\\textures\\");
-  mTextureManager.Compile();
+  mTextureManager.GenerateUV();
   mShaderManager.LoadDirectory("data\\shaders\\");
-  mShaderManager.Compile();
 
   boost::filesystem::path targetDir(dir);
   boost::filesystem::recursive_directory_iterator iter(targetDir);
@@ -142,8 +140,10 @@ Model * ModelManager::GetModel(const std::string &name)
 
 void ModelManager::Compile()
 {
-//   for (auto &mesh : mModels)
-//   {
-//     mesh.second.Compile();
-//   }
+  mTextureManager.Compile();
+  mShaderManager.Compile();
+  for (auto &model : mModels)
+  {
+    model.second.vertexArray->Compile();
+  }
 }

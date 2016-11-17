@@ -181,9 +181,15 @@
     <ClInclude Include="tools\tiny_obj_loader.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
-    <ClInclude Include="Render\ModelManager.h" />
-    <ClInclude Include="Render\Model.h" />
-    <ClInclude Include="Render\ShaderManager.h" />
+    <ClInclude Include="Render\ShaderManager.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ModelManager.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Model.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
